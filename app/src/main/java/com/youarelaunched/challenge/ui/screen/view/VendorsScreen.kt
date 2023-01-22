@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -30,6 +31,11 @@ import com.youarelaunched.challenge.ui.screen.state.VendorsScreenUiState
 import com.youarelaunched.challenge.ui.screen.view.components.ChatsumerSnackbar
 import com.youarelaunched.challenge.ui.screen.view.components.VendorItem
 import com.youarelaunched.challenge.ui.theme.VendorAppTheme
+
+
+//testing tags
+internal const val CONTENT = "content"
+internal const val EMPTY = "no_content"
 
 @Composable
 fun VendorsRoute(
@@ -90,7 +96,8 @@ fun ContentList(paddingValues: PaddingValues, vendors: List<Vendor>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(paddingValues),
+            .padding(paddingValues)
+            .testTag(CONTENT),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(
             vertical = 24.dp,
@@ -106,7 +113,9 @@ fun ContentList(paddingValues: PaddingValues, vendors: List<Vendor>) {
 @Composable
 fun NoResultView() {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag(EMPTY),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {

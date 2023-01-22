@@ -41,9 +41,7 @@ data class VendorAppColors(
     val snackBarBackground: Color
 )
 
-internal val LocalVendorAppColors = staticCompositionLocalOf<VendorAppColors> {
-    error("No vendor colors provided")
-}
+internal val LocalVendorAppColors = staticCompositionLocalOf { LightColorsPalette }
 
 @Composable
 internal fun ProvideVendorAppColors(
