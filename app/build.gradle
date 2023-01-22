@@ -16,6 +16,8 @@ android {
         versionCode 1
         versionName "1.0"
 
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
         vectorDrawables {
             useSupportLibrary true
         }
@@ -94,6 +96,7 @@ dependencies {
     testImplementation junit5.engine
     testImplementation mockk.lib
 
+    androidTestImplementation androidX.test
     androidTestImplementation compose.testJunit
     debugImplementation compose.testManifest
     debugImplementation compose.uiTooling
