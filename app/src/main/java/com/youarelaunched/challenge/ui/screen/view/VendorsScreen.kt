@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -59,52 +61,55 @@ fun VendorsScreen(
 ) {
     val focusManager = LocalFocusManager.current
 
+    val lazyListState = rememberLazyListState()
+
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    focusManager.clearFocus()
+                })
+            },
         backgroundColor = VendorAppTheme.colors.background,
         snackbarHost = { ChatsumerSnackbar(it) }
     ) { paddings ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .pointerInput(Unit) {
-                    detectTapGestures(onTap = {
-                        focusManager.clearFocus()
-                    })
-                }
-        ) {
-            SearchTextField(
-                textValue = uiState.searchText,
-                onValueChange = onValueChange,
-                onSearchIconClick = onSearchIconClick,
-                focusManager = focusManager,
-                hint = stringResource(R.string.search_hint),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, top = 24.dp, end = 16.dp, bottom = 4.dp),
+
+        when (uiState.requestState) {
+            is RequestState.Loading -> LoadingView()
+            is RequestState.Empty -> NoResultView()
+            is RequestState.Success -> ContentList(
+                state = lazyListState,
+                paddingValues = paddings,
+                vendors = uiState.requestState.vendors ?: emptyList()
             )
-            when (uiState.requestState) {
-                is RequestState.Loading -> LoadingView()
-                is RequestState.Empty -> NoResultView()
-                is RequestState.Success -> ContentList(
-                    paddingValues = paddings,
-                    vendors = uiState.requestState.vendors ?: emptyList()
-                )
-            }
         }
+
+        SearchTextField(
+            textValue = uiState.searchText,
+            onValueChange = onValueChange,
+            onSearchIconClick = onSearchIconClick,
+            focusManager = focusManager,
+            hint = stringResource(R.string.search_hint),
+            isCollapsed = lazyListState.isScrollingUp(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, top = 24.dp, end = 16.dp, bottom = 4.dp),
+        )
     }
 }
 
 @Composable
-fun ContentList(paddingValues: PaddingValues, vendors: List<Vendor>) {
+fun ContentList(paddingValues: PaddingValues, vendors: List<Vendor>, state: LazyListState) {
     LazyColumn(
+        state = state,
         modifier = Modifier
             .fillMaxSize()
             .padding(paddingValues)
             .testTag(CONTENT),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(
-            vertical = 20.dp,
+            vertical = 88.dp,
             horizontal = 16.dp
         )
     ) {
