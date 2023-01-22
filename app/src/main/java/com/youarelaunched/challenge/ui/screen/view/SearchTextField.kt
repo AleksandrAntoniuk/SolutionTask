@@ -38,7 +38,6 @@ fun SearchTextField(
     BasicTextField(
         value = textValue,
         onValueChange = onValueChange,
-        modifier = modifier,
         textStyle = VendorAppTheme.typography.subtitle2,
         singleLine = true,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
@@ -54,7 +53,8 @@ fun SearchTextField(
                 hint = hint,
                 innerTextField = innerTextField,
                 onSearchIconClick = onSearchIconClick,
-                focusManager = focusManager
+                focusManager = focusManager,
+                modifier = modifier
             )
         }
     )
@@ -66,12 +66,11 @@ private fun CustomDecorationBox(
     hint: String,
     innerTextField: @Composable () -> Unit,
     onSearchIconClick: () -> Unit,
-    focusManager: FocusManager
+    focusManager: FocusManager,
+    modifier: Modifier
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, top = 24.dp, end = 16.dp),
+        modifier = modifier,
         elevation = 4.dp,
         shape = RoundedCornerShape(16.dp),
         backgroundColor = Color.White
