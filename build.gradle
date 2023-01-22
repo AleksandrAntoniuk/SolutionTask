@@ -10,8 +10,11 @@ buildscript {
         kotlinVersion = "1.7.10"
 
         //Coroutines RN https://github.com/Kotlin/kotlinx.coroutines
+        coroutinesVersion = "1.6.4"
         coroutines = [
-                lib: "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+                lib : "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion",
+                test: "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+
         ]
 
         //AndroidX core RN https://developer.android.com/jetpack/androidx/releases/core
@@ -47,7 +50,11 @@ buildscript {
                 //Compose tooling RN https://developer.android.com/jetpack/compose/tooling
                 uiToolingPreview: "androidx.compose.ui:ui-tooling-preview:$composeUiVersion",
                 //Constraint layout https://developer.android.com/jetpack/compose/layouts/constraintlayout
-                constraintLayout: "androidx.constraintlayout:constraintlayout-compose:1.0.1"
+                constraintLayout: "androidx.constraintlayout:constraintlayout-compose:1.0.1",
+                //Testing
+                testJunit       : "androidx.compose.ui:ui-test-junit4:$composeUiVersion",
+                testManifest    : "androidx.compose.ui:ui-test-manifest:$composeUiVersion",
+                uiTooling       : "androidx.compose.ui:ui-tooling:$composeUiVersion"
         ]
 
         //Accompanist RN https://github.com/google/accompanist/releases
@@ -68,6 +75,21 @@ buildscript {
         retrofit = [
                 lib          : "com.squareup.retrofit2:retrofit:$retrofitVersion",
                 jsonConverter: "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+        ]
+
+        // Testing
+        // JUnit5 RN https://github.com/junit-team/junit5
+        junit5Version = "5.9.2"
+        junit5 = [
+            params: "org.junit.jupiter:junit-jupiter-params:$junit5Version",
+            api   : "org.junit.jupiter:junit-jupiter-api:$junit5Version",
+            engine: "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
+        ]
+
+        // Mockk RN https://github.com/mockk/mockk/releases
+        mockkVersion = "1.13.3"
+        mockk = [
+            lib: "io.mockk:mockk:$mockkVersion"
         ]
     }
 

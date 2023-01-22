@@ -54,6 +54,13 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    testOptions {
+        unitTests {
+            all {
+                useJUnitPlatform()
+            }
+        }
+    }
 }
 
 dependencies {
@@ -80,4 +87,14 @@ dependencies {
     kapt hiltDependencies.kapt
 
     implementation retrofit.jsonConverter
+
+    testImplementation coroutines.test
+    testImplementation junit5.params
+    testImplementation junit5.api
+    testImplementation junit5.engine
+    testImplementation mockk.lib
+
+    androidTestImplementation compose.testJunit
+    debugImplementation compose.testManifest
+    debugImplementation compose.uiTooling
 }
