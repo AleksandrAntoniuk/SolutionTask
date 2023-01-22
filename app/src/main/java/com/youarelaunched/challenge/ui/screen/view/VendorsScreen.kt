@@ -1,17 +1,31 @@
 package com.youarelaunched.challenge.ui.screen.view
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.youarelaunched.challenge.data.repository.model.Vendor
+import com.youarelaunched.challenge.middle.R
+import com.youarelaunched.challenge.ui.screen.state.RequestState
 import com.youarelaunched.challenge.ui.screen.state.VendorsScreenUiState
 import com.youarelaunched.challenge.ui.screen.view.components.ChatsumerSnackbar
 import com.youarelaunched.challenge.ui.screen.view.components.VendorItem
@@ -23,36 +37,99 @@ fun VendorsRoute(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    VendorsScreen(uiState = uiState)
+    VendorsScreen(
+        uiState = uiState,
+        onValueChange = viewModel::onInputTextChanged,
+        onSearchIconClick = viewModel::onSearchIconClick
+    )
 }
 
 @Composable
 fun VendorsScreen(
-    uiState: VendorsScreenUiState
+    uiState: VendorsScreenUiState,
+    onValueChange: (String) -> Unit,
+    onSearchIconClick: () -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         backgroundColor = VendorAppTheme.colors.background,
         snackbarHost = { ChatsumerSnackbar(it) }
     ) { paddings ->
-        if (!uiState.vendors.isNullOrEmpty()) {
-            LazyColumn(
-                modifier = Modifier
-                    .padding(paddings)
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(
-                    vertical = 24.dp,
-                    horizontal = 16.dp
-                )
-            ) {
-                items(uiState.vendors) { vendor ->
-                    VendorItem(
-                        vendor = vendor
-                    )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .pointerInput(Unit) {
+                    detectTapGestures(onTap = {
+                        focusManager.clearFocus()
+                    })
                 }
-
+        ) {
+            SearchTextField(
+                textValue = uiState.searchText,
+                onValueChange = onValueChange,
+                onSearchIconClick = onSearchIconClick,
+                focusManager = focusManager,
+                hint = stringResource(id = R.string.search_hint)
+            )
+            when (uiState.requestState) {
+                is RequestState.Loading -> LoadingView()
+                is RequestState.Empty -> NoResultView()
+                is RequestState.Success -> ContentList(
+                    paddingValues = paddings,
+                    vendors = uiState.requestState.vendors ?: emptyList()
+                )
             }
         }
+    }
+}
+
+@Composable
+fun ContentList(paddingValues: PaddingValues, vendors: List<Vendor>) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(
+            vertical = 24.dp,
+            horizontal = 16.dp
+        )
+    ) {
+        items(vendors) { vendor ->
+            VendorItem(vendor = vendor)
+        }
+    }
+}
+
+@Composable
+fun NoResultView() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            text = stringResource(id = R.string.search_no_result_title),
+            style = MaterialTheme.typography.h2,
+            color = VendorAppTheme.colors.textDarkGreen
+        )
+        Text(
+            text = stringResource(id = R.string.search_no_result_subtitle),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.subtitle2,
+            color = VendorAppTheme.colors.textDark
+        )
+    }
+}
+
+@Composable
+fun LoadingView() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(color = VendorAppTheme.colors.buttonSelected)
     }
 }
