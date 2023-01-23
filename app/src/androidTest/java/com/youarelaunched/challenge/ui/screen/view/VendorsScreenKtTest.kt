@@ -4,9 +4,9 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.youarelaunched.challenge.data.repository.model.Vendor
 import com.youarelaunched.challenge.ui.screen.state.RequestState
 import com.youarelaunched.challenge.ui.screen.state.VendorsScreenUiState
+import com.youarelaunched.challenge.utils.MockedObjectProvider.mockedVendorItem
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,15 +17,6 @@ internal class VendorsScreenKtTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val mockedVendorItem = Vendor(
-        id = 0,
-        companyName = "companyName",
-        coverPhoto = "coverPhoto",
-        area = "area",
-        favorite = true,
-        categories = null,
-        tags = null
-    )
     private val vendors = listOf(mockedVendorItem)
 
     private lateinit var state: VendorsScreenUiState

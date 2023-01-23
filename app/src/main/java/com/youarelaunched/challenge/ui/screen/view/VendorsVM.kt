@@ -37,11 +37,11 @@ class VendorsVM @Inject constructor(
         }
     }
 
-    private fun searchVendors(inputText: String) {
+    private fun searchVendors(query: String) {
         searchJob?.cancel()
         _uiState.update { it.copy(requestState = RequestState.Loading) }
         searchJob = viewModelScope.launch {
-            updateList(repository.searchVendors(inputText))
+            updateList(repository.searchVendors(query))
         }
     }
 

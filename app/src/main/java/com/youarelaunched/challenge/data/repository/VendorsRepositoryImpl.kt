@@ -21,8 +21,8 @@ class VendorsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun searchVendors(chars: String): List<Vendor> = withContext(workDispatcher) {
-        api.searchVendors(chars).map {
+    override suspend fun searchVendors(query: String): List<Vendor> = withContext(workDispatcher) {
+        api.searchVendors(query).map {
             it.toVendor()
         }
     }

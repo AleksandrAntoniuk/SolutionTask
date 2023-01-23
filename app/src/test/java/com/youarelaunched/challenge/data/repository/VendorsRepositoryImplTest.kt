@@ -1,10 +1,8 @@
 package com.youarelaunched.challenge.data.repository
 
 import com.youarelaunched.challenge.data.network.api.ApiVendors
-import com.youarelaunched.challenge.data.network.models.NetworkMediaAttachment
-import com.youarelaunched.challenge.data.network.models.NetworkVendor
+import com.youarelaunched.challenge.utils.MockedObjectProvider.mockedNetworkVendor
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -22,7 +20,7 @@ internal class VendorsRepositoryImplTest {
     private val repository: VendorsRepository = VendorsRepositoryImpl(Dispatchers.Unconfined, api)
 
     @Test
-    fun `should return at least one items of Vendors when request is success`() {
+    fun `should return at least one item of Vendors when request is success`() {
         //given
         coEvery { api.getVendors() } returns listOf(mockedNetworkVendor)
 
@@ -41,20 +39,4 @@ internal class VendorsRepositoryImplTest {
         assertThrows<RuntimeException> { repository.getVendors() }
     }
 
-    companion object {
-        private val mockedNetworkVendor = NetworkVendor(
-            areaServed = "areaServed",
-            categories = null,
-            companyName = "companyName",
-            coverPhoto = NetworkMediaAttachment(0,"",""),
-            profilePhoto = null,
-            distance = null,
-            favorite = false,
-            id = 0,
-            shopType = "shopType",
-            tags = null,
-            chatId = null,
-            type = null
-        )
-    }
 }

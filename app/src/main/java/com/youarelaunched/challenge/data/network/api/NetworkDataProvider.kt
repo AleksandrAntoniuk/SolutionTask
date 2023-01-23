@@ -31,10 +31,10 @@ class NetworkDataProvider @Inject constructor(
             .vendors
     }
 
-    override suspend fun searchVendors(chars: String): List<NetworkVendor> {
+    override suspend fun searchVendors(query: String): List<NetworkVendor> {
         return getVendors()
             .filter {
-            it.companyName.toLowerCase().contains(chars.toLowerCase())
+            it.companyName.toLowerCase().contains(query.toLowerCase())
         }
     }
 

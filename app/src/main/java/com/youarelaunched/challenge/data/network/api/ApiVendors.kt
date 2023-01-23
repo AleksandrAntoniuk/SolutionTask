@@ -6,5 +6,5 @@ interface ApiVendors {
 
     suspend fun getVendors(): List<NetworkVendor>
 
-    suspend fun searchVendors(chars: String): List<NetworkVendor>
+    suspend fun searchVendors(query: String): List<NetworkVendor>
 }
